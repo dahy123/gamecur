@@ -1,5 +1,14 @@
 import { useState } from 'react'
+import { createClient } from '@supabase/supabase-js'
 import './App.css'
+
+const supabase =
+  import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY
+    ? (globalThis.__gamecurSupabase ??= createClient(
+        import.meta.env.VITE_SUPABASE_URL,
+        import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+      ))
+    : null
 
 const normalizeKey = (value) =>
   value
@@ -45,9 +54,14 @@ const initialForm = {
 
 export default function App() {
   const [form, setForm] = useState(initialForm)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState({ type: '', message: '' })
 
   const handleInputChange = (event) => {
     const { name, value, type, checked } = event.target
+    setSubmitStatus((status) =>
+      status.type === 'error' ? { type: '', message: '' } : status,
+    )
 
     if (name.includes('.')) {
       const [group, field] = name.split('.')
@@ -115,14 +129,68 @@ export default function App() {
     'Je n’ai pas de matériel de jeu',
   ]
 
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+
+    if (!supabase) {
+      setSubmitStatus({
+        type: 'error',
+        message: 'Configuration Supabase introuvable. Vérifiez votre fichier .env.local.',
+      })
+      return
+    }
+
+    setIsSubmitting(true)
+    setSubmitStatus({ type: '', message: '' })
+
+    try {
+      const payload = {
+        nom: form.nom,
+        prenom: form.prenom,
+        telephone: form.telephone,
+        filiere: form.filiere,
+        interet: form.interet,
+        equipment: form.equipment,
+        jeux: form.jeux,
+        format: form.format,
+        budget: form.budget,
+        recompense: form.recompense,
+        disponibilite: form.disponibilite,
+        non_participation: form.nonParticipation,
+        remarque: form.remarque,
+      }
+
+      const { error } = await supabase.from('survey_responses').insert([payload])
+
+      if (error) {
+        throw error
+      }
+
+      setSubmitStatus({
+        type: 'success',
+        message: 'Votre réponse a bien été enregistrée.',
+      })
+      setForm(initialForm)
+    } catch (error) {
+      console.error(error)
+      setSubmitStatus({
+        type: 'error',
+        message:
+          'L’envoi a échoué. Vérifiez que la table Supabase survey_responses existe et que les politiques d’accès sont correctes.',
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   return (
     <main className="app-shell">
       <div className="form-wrapper">
         <header className="top-banner">
-          <div className="brand-mark">Game CUR</div>
+          <div className="brand-mark px-6">Game CUR</div>
           <div>
-            <p className="eyebrow">Étude de marché</p>
             <h1>Tournoi E-sport sur le Campus U.N.A</h1>
+            <p className="banner-caption">Votre avis contribue à créer un tournoi qui vous ressemble.</p>
           </div>
         </header>
 
@@ -131,7 +199,29 @@ export default function App() {
           l’organisation d’un tournoi e-sport sur le campus.
         </p>
 
-        <form className="survey-form" onSubmit={(event) => event.preventDefault()}>
+        {submitStatus.type === 'success' ? (
+          <section className="thank-you-card" role="status" aria-live="polite">
+            <div className="success-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="m5 12.5 4.5 4.5L19 7" />
+              </svg>
+            </div>
+            <p className="eyebrow">Réponse bien reçue</p>
+            <h2>Merci pour votre participation !</h2>
+            <p>{submitStatus.message} Votre contribution nous aide à organiser un tournoi e-sport adapté aux étudiants du campus.</p>
+            <button
+              className="secondary-button"
+              type="button"
+              onClick={() => {
+                setForm(initialForm)
+                setSubmitStatus({ type: '', message: '' })
+              }}
+            >
+              Répondre à une autre enquête
+            </button>
+          </section>
+        ) : (
+        <form className="survey-form" onSubmit={handleSubmit}>
           <section className="panel">
             <h2>Section 1 : Informations de contact</h2>
 
@@ -403,11 +493,20 @@ export default function App() {
               />
             </label>
 
+            {submitStatus.type === 'error' && (
+              <div className="submit-status error" role="alert">
+                {submitStatus.message}
+              </div>
+            )}
+
             <div className="submit-row">
-              <button type="submit">Soumettre le formulaire</button>
+              <button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? 'Envoi en cours...' : 'Soumettre le formulaire'}
+              </button>
             </div>
           </section>
         </form>
+        )}
       </div>
     </main>
   )

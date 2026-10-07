@@ -21,6 +21,11 @@ html {
   scroll-behavior: smooth;
 }
 
+::selection {
+  color: #fff;
+  background: var(--primary);
+}
+
 body {
   margin: 0;
   font-family: Inter, 'Segoe UI', sans-serif;
@@ -50,13 +55,14 @@ textarea {
   box-shadow: var(--shadow);
   backdrop-filter: blur(12px);
   overflow: hidden;
+  animation: page-enter 0.7s ease both;
 }
 
 .top-banner {
   display: flex;
   align-items: center;
   gap: 18px;
-  padding: 28px 32px 22px;
+  padding: 30px 32px;
   background: linear-gradient(135deg, rgba(217, 27, 27, 0.16), rgba(255, 255, 255, 0.02));
   border-bottom: 1px solid var(--border);
 }
@@ -75,6 +81,13 @@ textarea {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   box-shadow: 0 20px 30px rgba(217, 27, 27, 0.28);
+  flex: 0 0 auto;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.brand-mark:hover {
+  transform: translateY(-3px) rotate(-2deg);
+  box-shadow: 0 24px 38px rgba(217, 27, 27, 0.38);
 }
 
 .eyebrow {
@@ -92,6 +105,12 @@ textarea {
   line-height: 1.1;
 }
 
+.banner-caption {
+  margin: 10px 0 0;
+  color: #c7c7c7;
+  font-size: 0.96rem;
+}
+
 .intro-text {
   margin: 0;
   padding: 24px 32px 0;
@@ -104,6 +123,7 @@ textarea {
   flex-direction: column;
   gap: 22px;
   padding: 28px 32px 32px;
+  animation: content-enter 0.55s ease both;
 }
 
 .panel {
@@ -111,6 +131,20 @@ textarea {
   border: 1px solid var(--border);
   border-radius: 18px;
   padding: 24px;
+  transition: border-color 0.25s ease, transform 0.25s ease, background 0.25s ease;
+  animation: content-enter 0.5s ease both;
+}
+
+.panel:hover {
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.panel:nth-child(2) {
+  animation-delay: 0.06s;
+}
+
+.panel:nth-child(3) {
+  animation-delay: 0.12s;
 }
 
 .panel h2 {
@@ -145,7 +179,13 @@ textarea {
   border-radius: 12px;
   padding: 14px 16px;
   color: var(--text);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+input[type='text']:hover,
+input[type='tel']:hover,
+textarea:hover {
+  border-color: rgba(255, 255, 255, 0.24);
 }
 
 input[type='text']:focus,
@@ -180,6 +220,13 @@ textarea:focus {
 .check-option:hover {
   border-color: rgba(217, 27, 27, 0.4);
   background: rgba(217, 27, 27, 0.04);
+  transform: translateY(-1px);
+}
+
+.radio-option:has(input:checked),
+.check-option:has(input:checked) {
+  border-color: rgba(217, 27, 27, 0.72);
+  background: rgba(217, 27, 27, 0.1);
 }
 
 input[type='radio'],
@@ -230,6 +277,77 @@ textarea {
   background: linear-gradient(135deg, rgba(217, 27, 27, 0.1), rgba(255, 255, 255, 0.01));
 }
 
+.submit-status {
+  margin-top: 12px;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  animation: content-enter 0.25s ease both;
+}
+
+.submit-status.error {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #ffd7d7;
+}
+
+.thank-you-card {
+  max-width: 700px;
+  margin: 32px auto 48px;
+  padding: clamp(28px, 6vw, 60px);
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 0, rgba(217, 27, 27, 0.16), transparent 48%),
+    linear-gradient(145deg, #171717, #101010);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+  animation: thank-you-enter 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.success-icon {
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 24px;
+  border: 1px solid rgba(255, 91, 91, 0.45);
+  border-radius: 50%;
+  background: rgba(217, 27, 27, 0.16);
+  color: #ff7474;
+  animation: success-pop 0.5s 0.15s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.success-icon svg {
+  width: 36px;
+  height: 36px;
+}
+
+.success-icon path {
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.5;
+}
+
+.thank-you-card .eyebrow {
+  margin-bottom: 12px;
+}
+
+.thank-you-card h2 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+}
+
+.thank-you-card > p:not(.eyebrow) {
+  max-width: 490px;
+  margin: 16px auto 28px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
 .submit-row {
   display: flex;
   justify-content: flex-end;
@@ -245,12 +363,84 @@ button[type='submit'] {
   font-weight: 700;
   cursor: pointer;
   box-shadow: 0 16px 32px rgba(217, 27, 27, 0.28);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
 }
 
-button[type='submit']:hover {
+button[type='submit']:disabled {
+  cursor: wait;
+  opacity: 0.75;
+}
+
+button[type='submit']:hover:not(:disabled) {
   transform: translateY(-1px);
   box-shadow: 0 18px 34px rgba(217, 27, 27, 0.38);
+  filter: brightness(1.08);
+}
+
+.secondary-button {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 12px;
+  padding: 13px 20px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.secondary-button:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 91, 91, 0.65);
+  background: rgba(217, 27, 27, 0.12);
+}
+
+:is(button, input, textarea):focus-visible {
+  outline: 2px solid #ff6565;
+  outline-offset: 3px;
+}
+
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes content-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes thank-you-enter {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes success-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @media (max-width: 760px) {
@@ -268,6 +458,10 @@ button[type='submit']:hover {
     width: 82px;
     height: 82px;
     font-size: 0.92rem;
+  }
+
+  .banner-caption {
+    line-height: 1.5;
   }
 
   .intro-text,
@@ -291,5 +485,25 @@ button[type='submit']:hover {
 
   button[type='submit'] {
     width: 100%;
+  }
+
+  .thank-you-card {
+    margin: 24px 14px 36px;
+    border-radius: 18px;
+  }
+
+  .secondary-button {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

@@ -1,122 +1,414 @@
 import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
 import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+const normalizeKey = (value) =>
+  value
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z]/g, '')
 
-  return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+const initialForm = {
+  nom: '',
+  prenom: '',
+  telephone: '',
+  filiere: '',
+  interet: 'oui',
+  equipment: {
+    smartphonetablette: false,
+    pcportablepersonnel: false,
+    pcfixecybercafesalledesjeux: false,
+    consoleplaystationxbox: false,
+  },
+  jeux: {
+    easportsfcefootballpes: false,
+    pubgmobilefreefire: false,
+    callofdutymobile: false,
+    valorantcs2: false,
+    mobilelegendsleagueoflegends: false,
+    tekken8streetfighter6: false,
+    autre: '',
+  },
+  format: '',
+  budget: '',
+  recompense: '',
+  disponibilite: '',
+  nonParticipation: {
+    jenepasajoauxjeux: false,
+    jenaiapasdedisponibilite: false,
+    leprixdeparticipationesttropeleve: false,
+    jenaiaspasdematerieldejeu: false,
+    autre: '',
+  },
+  remarque: '',
 }
 
-export default App
+export default function App() {
+  const [form, setForm] = useState(initialForm)
+
+  const handleInputChange = (event) => {
+    const { name, value, type, checked } = event.target
+
+    if (name.includes('.')) {
+      const [group, field] = name.split('.')
+      setForm((prev) => ({
+        ...prev,
+        [group]: {
+          ...prev[group],
+          [field]: type === 'checkbox' ? checked : value,
+        },
+      }))
+      return
+    }
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+    }))
+  }
+
+  const radioOptions = [
+    { value: 'oui', label: 'Oui, je suis intéressé(e)' },
+    { value: 'non', label: 'Non, je ne souhaite pas participer' },
+  ]
+
+  const equipmentOptions = [
+    'Smartphone / Tablette',
+    'PC portable (personnel)',
+    'PC fixe (Cybercafé / Salle de jeux)',
+    'Console (PlayStation, Xbox)',
+  ]
+
+  const jeuxOptions = [
+    'EA Sports FC / eFootball (PES)',
+    'PUBG Mobile / Free Fire',
+    'Call of Duty: Mobile',
+    'Valorant / CS2',
+    'Mobile Legends / League of Legends',
+    'Tekken 8 / Street Fighter 6',
+  ]
+
+  const budgetOptions = [
+    '3 000 Ar',
+    'Entre 5 000 Ar et 10 000 Ar',
+    'Entre 10 000 Ar et 15 000 Ar',
+    'Plus de 15 000 Ar',
+  ]
+
+  const rewardOptions = [
+    'Vola en espèces (Cash prize)',
+    'Des forfaits internet / crédits de communication',
+    'Du matériel (écouteurs, manettes, goodies)',
+  ]
+
+  const availabilityOptions = [
+    'Jeudi après-midi',
+    'Vendredi après-midi',
+    'Samedi (journée)',
+    'Dimanche (journée)',
+  ]
+
+  const noParticipationReasons = [
+    'Je ne joue pas à des jeux',
+    'Je n’ai pas de disponibilité',
+    'Le prix de participation est trop élevé',
+    'Je n’ai pas de matériel de jeu',
+  ]
+
+  return (
+    <main className="app-shell">
+      <div className="form-wrapper">
+        <header className="top-banner">
+          <div className="brand-mark">Game CUR</div>
+          <div>
+            <p className="eyebrow">Étude de marché</p>
+            <h1>Tournoi E-sport sur le Campus U.N.A</h1>
+          </div>
+        </header>
+
+        <p className="intro-text">
+          Merci de prendre 2 minutes pour répondre à cette enquête concernant
+          l’organisation d’un tournoi e-sport sur le campus.
+        </p>
+
+        <form className="survey-form" onSubmit={(event) => event.preventDefault()}>
+          <section className="panel">
+            <h2>Section 1 : Informations de contact</h2>
+
+            <div className="grid two-columns">
+              <label>
+                <span>Nom</span>
+                <input
+                  type="text"
+                  name="nom"
+                  value={form.nom}
+                  onChange={handleInputChange}
+                  placeholder="Votre nom"
+                />
+              </label>
+
+              <label>
+                <span>Prénom</span>
+                <input
+                  type="text"
+                  name="prenom"
+                  value={form.prenom}
+                  onChange={handleInputChange}
+                  placeholder="Votre prénom"
+                />
+              </label>
+            </div>
+
+            <div className="grid two-columns">
+              <label>
+                <span>Numéro de téléphone / WhatsApp</span>
+                <input
+                  type="tel"
+                  name="telephone"
+                  value={form.telephone}
+                  onChange={handleInputChange}
+                  placeholder="+261 ..."
+                />
+              </label>
+
+              <label>
+                <span>Filière et année d’étude</span>
+                <input
+                  type="text"
+                  name="filiere"
+                  value={form.filiere}
+                  onChange={handleInputChange}
+                  placeholder="Ex: Informatique - L2"
+                />
+              </label>
+            </div>
+          </section>
+
+          <section className="panel">
+            <h2>Question de sélection</h2>
+            <div className="selection-box">
+              {radioOptions.map((option) => (
+                <label key={option.value} className="radio-option">
+                  <input
+                    type="radio"
+                    name="interet"
+                    value={option.value}
+                    checked={form.interet === option.value}
+                    onChange={handleInputChange}
+                  />
+                  <span>{option.label}</span>
+                </label>
+              ))}
+            </div>
+          </section>
+
+          {form.interet === 'oui' && (
+            <>
+              <section className="panel">
+                <h2>Section 2 : Détails de participation</h2>
+
+                <div className="question-block">
+                  <h3>1. Quel équipement utilisez-vous pour jouer ?</h3>
+                  <div className="checkbox-grid">
+                    {equipmentOptions.map((item) => {
+                      const key = normalizeKey(item)
+
+                      return (
+                        <label key={item} className="check-option">
+                          <input
+                            type="checkbox"
+                            name={`equipment.${key}`}
+                            checked={form.equipment[key] || false}
+                            onChange={handleInputChange}
+                          />
+                          <span>{item}</span>
+                        </label>
+                      )
+                    })}
+                  </div>
+                </div>
+
+                <div className="question-block">
+                  <h3>2. Quels jeux préférez-vous participer ?</h3>
+                  <div className="checkbox-grid">
+                    {jeuxOptions.map((item) => {
+                      const key = normalizeKey(item)
+
+                      return (
+                        <label key={item} className="check-option">
+                          <input
+                            type="checkbox"
+                            name={`jeux.${key}`}
+                            checked={form.jeux[key] || false}
+                            onChange={handleInputChange}
+                          />
+                          <span>{item}</span>
+                        </label>
+                      )
+                    })}
+                  </div>
+
+                  <label className="inline-field">
+                    <span>Autre</span>
+                    <input
+                      type="text"
+                      name="jeux.autre"
+                      value={form.jeux.autre}
+                      onChange={handleInputChange}
+                      placeholder="Précisez un autre jeu"
+                    />
+                  </label>
+                </div>
+
+                <div className="question-block">
+                  <h3>3. Compétition souhaitée</h3>
+                  <div className="radio-stack">
+                    <label className="radio-option">
+                      <input
+                        type="radio"
+                        name="format"
+                        value="1 contre 1"
+                        checked={form.format === '1 contre 1'}
+                        onChange={handleInputChange}
+                      />
+                      <span>1 contre 1</span>
+                    </label>
+                    <label className="radio-option">
+                      <input
+                        type="radio"
+                        name="format"
+                        value="En équipe avec mes amis"
+                        checked={form.format === 'En équipe avec mes amis'}
+                        onChange={handleInputChange}
+                      />
+                      <span>En équipe avec mes amis</span>
+                    </label>
+                    <label className="radio-option">
+                      <input
+                        type="radio"
+                        name="format"
+                        value="En équipe aléatoire"
+                        checked={form.format === 'En équipe aléatoire'}
+                        onChange={handleInputChange}
+                      />
+                      <span>En équipe aléatoire (Matchmaking sur place)</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div className="question-block">
+                  <h3>4. Quel prix de participation accepteriez-vous ?</h3>
+                  <div className="radio-stack">
+                    {budgetOptions.map((option) => (
+                      <label key={option} className="radio-option">
+                        <input
+                          type="radio"
+                          name="budget"
+                          value={option}
+                          checked={form.budget === option}
+                          onChange={handleInputChange}
+                        />
+                        <span>{option}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="question-block">
+                  <h3>5. Quelle récompense vous intéresse ?</h3>
+                  <div className="radio-stack">
+                    {rewardOptions.map((option) => (
+                      <label key={option} className="radio-option">
+                        <input
+                          type="radio"
+                          name="recompense"
+                          value={option}
+                          checked={form.recompense === option}
+                          onChange={handleInputChange}
+                        />
+                        <span>{option}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="question-block">
+                  <h3>6. À quel moment êtes-vous disponible ?</h3>
+                  <div className="radio-stack">
+                    {availabilityOptions.map((option) => (
+                      <label key={option} className="radio-option">
+                        <input
+                          type="radio"
+                          name="disponibilite"
+                          value={option}
+                          checked={form.disponibilite === option}
+                          onChange={handleInputChange}
+                        />
+                        <span>{option}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </section>
+            </>
+          )}
+
+          {form.interet === 'non' && (
+            <section className="panel">
+              <h2>Section 3 : Raison de votre choix</h2>
+
+              <div className="question-block">
+                <h3>Pourquoi ne souhaitez-vous pas participer ?</h3>
+                <div className="checkbox-grid">
+                  {noParticipationReasons.map((item) => {
+                    const key = normalizeKey(item)
+
+                    return (
+                      <label key={item} className="check-option">
+                        <input
+                          type="checkbox"
+                          name={`nonParticipation.${key}`}
+                          checked={form.nonParticipation[key] || false}
+                          onChange={handleInputChange}
+                        />
+                        <span>{item}</span>
+                      </label>
+                    )
+                  })}
+                </div>
+
+                <label className="inline-field">
+                  <span>Autre</span>
+                  <input
+                    type="text"
+                    name="nonParticipation.autre"
+                    value={form.nonParticipation.autre}
+                    onChange={handleInputChange}
+                    placeholder="Précisez votre raison"
+                  />
+                </label>
+              </div>
+            </section>
+          )}
+
+          <section className="panel footer-panel">
+            <label className="inline-field textarea-field">
+              <span>Commentaires ou remarque</span>
+              <textarea
+                name="remarque"
+                value={form.remarque}
+                onChange={handleInputChange}
+                rows="4"
+                placeholder="Ajouter un commentaire ou une suggestion..."
+              />
+            </label>
+
+            <div className="submit-row">
+              <button type="submit">Soumettre le formulaire</button>
+            </div>
+          </section>
+        </form>
+      </div>
+    </main>
+  )
+}

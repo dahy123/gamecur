@@ -1,6 +1,8 @@
-import { useState } from 'react'
+import { lazy, Suspense, useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
 import './App.css'
+
+const AdminPage = lazy(() => import('./pages/Admin.jsx'))
 
 const supabase =
   import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY
@@ -52,7 +54,7 @@ const initialForm = {
   remarque: '',
 }
 
-export default function App() {
+function SurveyPage() {
   const [form, setForm] = useState(initialForm)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState({ type: '', message: '' })
@@ -509,5 +511,21 @@ export default function App() {
         )}
       </div>
     </main>
+  )
+}
+
+export default function App() {
+  const routePath =
+    new URLSearchParams(window.location.search).get('page') ||
+    window.location.pathname.replace(import.meta.env.BASE_URL, '').replace(/^\/+|\/+$/g, '')
+
+  if (routePath !== 'admin') {
+    return <SurveyPage />
+  }
+
+  return (
+    <Suspense fallback={<main className="app-shell">Chargement de la page admin…</main>}>
+      <AdminPage />
+    </Suspense>
   )
 }

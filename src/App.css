@@ -507,3 +507,357 @@ button[type='submit']:hover:not(:disabled) {
     transition-duration: 0.01ms !important;
   }
 }
+
+.admin-shell {
+  padding-top: 32px;
+}
+
+.admin-wrapper {
+  max-width: 1440px;
+  margin: 0 auto;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  background: rgba(15, 15, 15, 0.94);
+  box-shadow: var(--shadow);
+  animation: page-enter 0.55s ease both;
+}
+
+.admin-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 26px 30px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(120deg, rgba(217, 27, 27, 0.14), transparent 65%);
+}
+
+.admin-brand {
+  width: 76px;
+  height: 76px;
+  border-radius: 16px;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.admin-heading {
+  min-width: 0;
+}
+
+.admin-heading h1 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(1.6rem, 3vw, 2.25rem);
+}
+
+.admin-heading > p:last-child {
+  margin: 7px 0 0;
+  color: var(--muted);
+}
+
+.admin-back-link {
+  margin-left: auto;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.admin-content {
+  padding: 24px 30px 30px;
+}
+
+.public-access-notice {
+  margin-bottom: 20px;
+  border: 1px solid rgba(245, 158, 11, 0.38);
+  border-radius: 10px;
+  padding: 12px 15px;
+  background: rgba(245, 158, 11, 0.08);
+  color: #ffe3ad;
+  font-size: 0.9rem;
+}
+
+.admin-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.response-count {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  min-width: 145px;
+  color: var(--muted);
+}
+
+.response-count strong {
+  color: #fff;
+  font-size: 1.5rem;
+}
+
+.admin-search {
+  min-width: 180px;
+  max-width: 320px;
+  flex: 1;
+}
+
+.admin-search input {
+  height: 44px;
+  padding: 10px 13px;
+}
+
+.secondary-button,
+.export-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.secondary-button:hover:not(:disabled),
+.export-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  border-color: rgba(255, 91, 91, 0.65);
+  background: rgba(217, 27, 27, 0.12);
+}
+
+.secondary-button:disabled,
+.export-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.export-button {
+  border-color: var(--primary);
+  background: var(--primary);
+}
+
+.export-button:hover:not(:disabled) {
+  background: var(--primary-strong);
+}
+
+.export-button-light {
+  border-color: rgba(255, 255, 255, 0.24);
+  background: #f3f3f3;
+  color: #111;
+}
+
+.export-button-light:hover:not(:disabled) {
+  border-color: #fff;
+  background: #fff;
+  color: #111;
+}
+
+.table-frame {
+  overflow: auto;
+  max-height: min(65vh, 760px);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #101010;
+}
+
+.responses-table {
+  width: 100%;
+  min-width: 1140px;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.responses-table th,
+.responses-table td {
+  max-width: 270px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  padding: 13px 14px;
+  color: #d8d8d8;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+.responses-table th {
+  position: sticky;
+  z-index: 1;
+  top: 0;
+  background: #1a1a1a;
+  color: #fff;
+  font-size: 0.76rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.responses-table tbody tr {
+  transition: background 0.18s ease;
+}
+
+.responses-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.responses-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.responses-table .respondent-name {
+  color: #fff;
+  font-weight: 700;
+}
+
+.answer-pill {
+  display: inline-flex;
+  border-radius: 99px;
+  padding: 3px 9px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.answer-yes {
+  background: rgba(34, 197, 94, 0.12);
+  color: #a8f0bd;
+}
+
+.answer-no {
+  background: rgba(255, 255, 255, 0.08);
+  color: #d4d4d4;
+}
+
+.delete-row-button {
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  border-radius: 8px;
+  padding: 7px 10px;
+  background: rgba(185, 28, 28, 0.12);
+  color: #ffb4b4;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.delete-row-button:hover:not(:disabled) {
+  border-color: #ef4444;
+  background: rgba(185, 28, 28, 0.32);
+}
+
+.delete-row-button:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.table-empty {
+  height: 120px;
+  color: var(--muted) !important;
+  text-align: center;
+  vertical-align: middle !important;
+}
+
+.admin-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding-top: 16px;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.admin-pagination > div {
+  display: flex;
+  gap: 8px;
+}
+
+.admin-search-hint {
+  margin: 10px 0 0;
+  color: #929292;
+  font-size: 0.78rem;
+}
+
+.sr-only {
+  position: absolute;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .admin-toolbar {
+    flex-wrap: wrap;
+  }
+
+  .admin-search {
+    max-width: none;
+    order: 1;
+    flex-basis: 100%;
+  }
+
+  .response-count {
+    flex: 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .admin-shell {
+    padding: 16px 10px;
+  }
+
+  .admin-header {
+    flex-wrap: wrap;
+    gap: 14px;
+    padding: 20px 16px;
+  }
+
+  .admin-brand {
+    width: 60px;
+    height: 60px;
+    font-size: 0.72rem;
+  }
+
+  .admin-heading {
+    flex: 1;
+  }
+
+  .admin-heading > p:last-child {
+    font-size: 0.88rem;
+    line-height: 1.45;
+  }
+
+  .admin-back-link {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .admin-content {
+    padding: 18px 14px 20px;
+  }
+
+  .admin-toolbar > .secondary-button,
+  .admin-toolbar > .export-button {
+    flex: 1 1 calc(50% - 8px);
+  }
+
+  .admin-pagination {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .admin-pagination > div {
+    width: 100%;
+  }
+
+  .admin-pagination .secondary-button {
+    flex: 1;
+  }
+}
